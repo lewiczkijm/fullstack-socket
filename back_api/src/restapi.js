@@ -11,9 +11,15 @@ function restApi(db){
 
     // Login function: get name, send objectId
     router.post("/login",async (req,res)=>{
-        if(!req.body.name) res.status(500).send("Name didn't get")
+        if(!req.body.name) {
+            res.status(500).send("Name didn't get")
+            return
+        }
         const employee = await collection.findOne({name:req.body.name})
-        if(employee === null) res.status(404).send("Employee not found")
+        if(employee === null) {
+            res.status(404).send("Employee not found")
+            return
+        }
         res.send(employee._id)
     })
     return router
