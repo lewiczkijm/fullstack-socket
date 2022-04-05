@@ -14,14 +14,14 @@ function restApi(db){
     router.post("/login",async (req,res)=>{
 
         if(!req.body.name) {
-            res.status(500).send("Name didn't get")
+            res.status(500).send({message:"Name didn't get"})
             return
         }
 
         const employee = await collection.findOne({name:req.body.name})
 
         if(employee === null) {
-            res.status(404).send("Employee not found")
+            res.status(404).send({message:"Employee not found"})
             return
         }
         res.send(employee._id)
@@ -33,14 +33,14 @@ function restApi(db){
         try{
             id = new ObjectId(req.params.id)
         } catch (e){
-            res.status(500).send("Incorrect user id")
+            res.status(500).send({message:"Incorrect user id"})
             return
         }
 
         const employee = await collection.findOne({"_id":id})
         console.log(employee)
         if(employee === null) {
-            res.status(404).send("Employee not found")
+            res.status(404).send({message:"Employee not found"})
             return
         }
 

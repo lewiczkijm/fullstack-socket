@@ -1,28 +1,23 @@
 import {useState} from "react";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 export function Login(){
     const navigate = useNavigate()
     const [name,setName] = useState("")
     const [error,setError] = useState("")
-    const login = async ()=>{
-        const config = {
-            method:"post",
-            headers:{"Content-Type":"application/json"},
-            body:JSON.stringify({name})
-        }
 
-        try{
-            // TODO change urls as /api/proxy - for production version
-            const res = await fetch("/login",config)
-            if(!res.ok) throw res
-            const id = await res.text()
-            navigate(`/user/${id}`)
-        } catch(e){
-            // @ts-ignore
-            const message = await e.text().catch("Server error! Try again later")
-            setError(message)
-        }
+    // query to login
+    const login = ()=>{
+
+        axios.post("/login",{name}).then(res=>{
+            navigate(`/user/${res.data}`)
+        }).catch(e=>{
+            let error;
+            if(e.response.data.message) error = e.response.data.message
+            else error = "Server error! Try again later"
+            setError(error)
+        })
     }
 
     return <div className="is-fullwidth is-fullheight is-flex">
