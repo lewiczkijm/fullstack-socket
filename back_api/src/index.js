@@ -4,22 +4,20 @@ const bodyParser = require('body-parser')
 
 
 const mongodb = require("./connection")
+const router = require("./restapi");
 
-const app = express()
 const PORT = process.env.PORT || 8080
 
-mongodb.connect()
+async function connect(){
+	const app = express()
+	app.use(bodyParser.json())
+	app.use(morgan('combined'))
 
-// parse application/json
-app.use(bodyParser.json())
+	const db = await mongodb.connect()
 
-app.use(morgan('combined'))
+	app.use("/",router(db))
 
-app.get("/",(req,res)=>res.send("Hello"))
-app.get("/clients",
-	(req,res)=>res.send(clients)
-	)
-// login
+	app.listen(PORT,console.log("Started on " + PORT))
+}
 
-
-app.listen(PORT,console.log("Started on " + PORT))
+connect()
