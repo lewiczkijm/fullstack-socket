@@ -1,3 +1,4 @@
+const http = require("http")
 const express = require("express")
 const morgan = require("morgan")
 const bodyParser = require('body-parser')
@@ -5,6 +6,7 @@ const bodyParser = require('body-parser')
 
 const mongodb = require("./connection")
 const router = require("./restapi");
+const socket = require("./socketApi")
 
 const PORT = process.env.PORT || 8080
 
@@ -16,8 +18,10 @@ async function connect(){
 	const db = await mongodb.connect()
 
 	app.use("/",router(db))
+	const server = http.createServer(app)
 
-	app.listen(PORT,console.log("Started on " + PORT))
+	socket(server,db)
+	server.listen(PORT)
 }
 
 connect()

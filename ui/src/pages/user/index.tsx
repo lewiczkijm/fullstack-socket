@@ -4,6 +4,7 @@ import {useEffect, useState} from "react";
 import axios from "axios";
 import {API_PREFIX, SERVER_ERROR_MSG} from "../../env";
 import {Message} from "../../components/message";
+import {Users} from "./users";
 
 export function User(){
     const {id} = useParams()
@@ -24,6 +25,6 @@ export function User(){
         <Header name={name}/>
         {error?
             <div className="is-fullheight is-flex"><Message type={"error"} content={error}/></div>
-            :<div></div>}
+            :<Users id={id}/>}
     </div>
 }

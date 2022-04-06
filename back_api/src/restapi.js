@@ -38,7 +38,6 @@ function restApi(db){
         }
 
         const employee = await collection.findOne({"_id":id})
-        console.log(employee)
         if(employee === null) {
             res.status(404).send({message:"Employee not found"})
             return
