@@ -9,12 +9,12 @@ import {Users} from "./users";
 export function User(){
     const {id} = useParams()
 
-    const [name, setName] = useState("...")
+    const [[name,status], setNameStatus] = useState(["",""])
     const [error, setError] = useState("")
 
     useEffect(()=>{
         axios.get(`${API_PREFIX}/user/${id}`)
-            .then(res=>setName(`Hello ${res.data.name}`))
+            .then(res=>setNameStatus([`Hello ${res.data.name}`,res.data.status]))
             .catch(e=>{
                 setError(e.response.data.message || SERVER_ERROR_MSG)
             })
@@ -25,6 +25,6 @@ export function User(){
         <Header name={name}/>
         {error?
             <div className="is-fullheight is-flex"><Message type={"error"} content={error}/></div>
-            :<Users id={id}/>}
+            :<Users id={id} status={status}/>}
     </div>
 }
