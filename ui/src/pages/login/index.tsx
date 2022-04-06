@@ -1,6 +1,7 @@
 import {useState} from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import {API_PREFIX, SERVER_ERROR_MSG} from "../../env";
 
 export function Login(){
     const navigate = useNavigate()
@@ -10,13 +11,10 @@ export function Login(){
     // query to login
     const login = ()=>{
 
-        axios.post("/login",{name}).then(res=>{
-            navigate(`/user/${res.data}`)
-        }).catch(e=>{
-            let error;
-            if(e.response.data.message) error = e.response.data.message
-            else error = "Server error! Try again later"
-            setError(error)
+        axios.post(`${API_PREFIX}/login`,{name})
+            .then(res=>navigate(`/user/${res.data}`))
+            .catch(e=>{
+                setError(e.response.data.message || SERVER_ERROR_MSG)
         })
     }
 
