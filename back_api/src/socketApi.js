@@ -12,15 +12,22 @@ module.exports = function (server,db){
         const employees = await collection.find().toArray()
         socket.emit("send",employees)
         socket.on("update",async result=>{
-            console.log(result)
             let id
 
             try{
                 id = new ObjectId(result.id)
+                if(!["Working","Vacation","Sickness"].includes(result.status)) throw new TypeError("Wrong keyword")
             } catch (e){
+                console.log("socket request error")
+                socket.emit("error",{message:"Server error! Bed request"})
                 return
             }
-                await collection.updateOne({"_id":id},{$set:{status:result.status,timestamp:new Date()}})
+                const status = await collection.updateOne({"_id":id},{$set:{status:result.status,timestamp:new Date()}})
+                if(status.modifiedCount !== 1){
+                    console.log("socket request error")
+                    socket.emit("error",{message:"Server error! Bed request"})
+                    return
+                }
                 const employees = await collection.find().toArray()
                 socket.emit("send",employees)
                 socket.broadcast.emit("send",employees)

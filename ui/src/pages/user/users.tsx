@@ -1,6 +1,8 @@
 import {useEffect, useRef, useState} from "react";
 import { io } from "socket.io-client";
 import {EmploeesTable} from "./emploeesTable";
+import {SERVER_ERROR_MSG} from "../../env";
+import {Message} from "../../components/message";
 
 export type UserType = {
     id:string | undefined
@@ -26,11 +28,19 @@ export function Users({id,status}:UserType){
         socket.current = io("/",)
 
         // subscribe to update users
-        socket.current.on('send', (res:any)=>{
-            setEmployees(res.map((employee: EmploeeType)=>({...employee,timestamp:new Date(employee.timestamp)})))
+        socket.current.on('send', (res:EmploeeType[])=>{
+            setEmployees(res.map((employee)=>({...employee,timestamp:new Date(employee.timestamp)})))
         });
-        // socket.current.on("error")
-        // socket.current.on("connect_error")
+
+        // Subscribe to error processing
+        socket.current.on("error",(res:any)=> {
+            setError(res.message)
+            setEmpStatus(status)
+            setTimeout(()=>setError(""),5000)
+        })
+        socket.current.on("connect_error",()=>setTimeout(()=>setError(SERVER_ERROR_MSG),1000 * 10))
+        socket.current.on("connect",()=>setError(""))
+
     },[id])
 
     useEffect(()=>{
@@ -51,5 +61,8 @@ export function Users({id,status}:UserType){
         </div>
         <hr/>
         <EmploeesTable employees={employees}/>
+        {
+            error && <Message content={error} type={"error"}/>
+        }
     </div>
 }
