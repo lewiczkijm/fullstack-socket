@@ -6,3 +6,16 @@ body {
 .is-fullheight{
   height: 100vh;
 }
+.navbar-item{
+  color: #fff;
+  align-items: center;
+  display: flex;
+  line-height: 1.5;
+  padding: 0.5rem 0.75rem;
+  position: relative;
+  height: 100%;
+}
+.navbar-item:hover{
+  background-color: #00b89c !important;
+  color: white !important;
+}

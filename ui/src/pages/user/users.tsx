@@ -1,7 +1,7 @@
 import {useEffect, useRef, useState} from "react";
 import { io } from "socket.io-client";
 import {EmploeesTable} from "./emploeesTable";
-import {SERVER_ERROR_MSG} from "../../env";
+import {API_PREFIX, SERVER_ERROR_MSG} from "../../env";
 import {Message} from "../../components/message";
 
 export type UserType = {
@@ -25,7 +25,7 @@ export function Users({id,status}:UserType){
     // Subscribe to socketIO
     useEffect(()=>{
         if(!id) return
-        socket.current = io("/",)
+        socket.current = io(API_PREFIX,)
 
         // subscribe to update users
         socket.current.on('send', (res:EmploeeType[])=>{
