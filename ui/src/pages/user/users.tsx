@@ -18,15 +18,26 @@ export function Users({id,status}:UserType){
 
     const [empStatus,setEmpStatus] = useState<string>(status)
     const [employees,setEmployees] = useState<Array<EmploeeType>>([])
+    const [error,setError] = useState("")
 
+    // Subscribe to socketIO
     useEffect(()=>{
         if(!id) return
         socket.current = io("/",)
+
+        // subscribe to update users
         socket.current.on('send', (res:any)=>{
             setEmployees(res.map((employee: EmploeeType)=>({...employee,timestamp:new Date(employee.timestamp)})))
         });
-
+        // socket.current.on("error")
+        // socket.current.on("connect_error")
     },[id])
+
+    useEffect(()=>{
+        if(!empStatus) return
+        socket.current.emit("update",{id:id,status:empStatus})
+    },[empStatus])
+
     return <div style={{padding:"64px 128px"}}>
         <div style={{padding:"0 16px"}} className="block is-flex is-align-items-center">
             <h2 className="heading is-size-4">Status</h2>

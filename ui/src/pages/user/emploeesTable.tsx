@@ -3,9 +3,12 @@ import {EmploeeType} from "./users";
 export function EmploeesTable({employees}:{employees:Array<EmploeeType>}){
 
     return <table className="table is-fullwidth">
-        <th>Name</th><th>Status</th><th>Timestamp</th>
+        <thead>
+            <tr><th>Name</th><th>Status</th><th>Timestamp</th></tr>
+        </thead>
+        <tbody>
         {
-            employees.map(employee=><tr>
+            employees.map(employee=><tr key={employee._id}>
                 <td>{employee.name}</td>
                 <td>
                     {
@@ -17,5 +20,7 @@ export function EmploeesTable({employees}:{employees:Array<EmploeeType>}){
                 <td>{employee.timestamp.toLocaleDateString()}</td>
             </tr>)
         }
+
+        </tbody>
     </table>
 }

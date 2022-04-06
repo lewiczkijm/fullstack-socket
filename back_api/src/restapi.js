@@ -1,9 +1,6 @@
 const express = require("express")
 const router = express.Router()
 const {ObjectId} = require("mongodb")
-// router.use(function (req, res, next) {
-//     next();
-// });
 
 
 //  rest api operations with db
